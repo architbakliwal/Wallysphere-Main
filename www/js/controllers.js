@@ -190,31 +190,37 @@ angular.module('starter.controllers', [])
             id: 11,
             title: 'Downloading Morning Wallpaper',
             text: 'This is a no show notification which on trigger download morning wallpaper',
-            at: _15_seconds_from_now
+            at: _15_seconds_from_now,
+            smallIcon: 'res://icon'
         }, {
             id: 1,
             title: 'Downloading Wallpapers',
             text: downloadmsg,
             at: new Date(downloadTime),
-            every: 'daily'
+            every: 'day',
+            smallIcon: 'res://icon'
         }, {
             id: 2,
             title: 'Good Morning!!!',
             text: morningmsg,
-            every: 'daily',
-            at: new Date(morning)
+            every: 'day',
+            // at: new Date(morning),
+            at: _45_seconds_from_now,
+            smallIcon: 'res://icon'
         }, {
             id: 3,
             title: 'Good Afternoon!!!',
             text: afternoonmsg,
-            every: 'daily',
-            at: new Date(afternoon)
+            every: 'day',
+            at: new Date(afternoon),
+            smallIcon: 'res://icon'
         }, {
             id: 4,
             title: 'Good Night!!!',
             text: nightmsg,
-            every: 'daily',
-            at: new Date(night)
+            every: 'day',
+            at: new Date(night),
+            smallIcon: 'res://icon'
         }]);
 
         cordova.plugins.notification.local.on("schedule", function(notification) {

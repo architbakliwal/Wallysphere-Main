@@ -18,20 +18,24 @@ angular.module('starter', ['ionic', 'starter.controllers'])
             StatusBar.styleDefault();
         }
 
+        // Android customization
+        cordova.plugins.backgroundMode.setDefaults({
+            text: 'Doing heavy tasks.'
+        });
+        // Enable background mode
+        cordova.plugins.backgroundMode.enable();
+
         $ionicPlatform.registerBackButtonAction(function(e) {
             function onConfirm(buttonIndex) {
-                console.log('You selected button ' + buttonIndex);
-                if (buttonIndex == 1) {
+                if (buttonIndex == 3) {
                     ionic.Platform.exitApp();
-                } else {
-                    console.log("User canceled exit.");
-                }
+                } else {}
             }
             navigator.notification.confirm(
                 'Are you sure you want to exit?', // message
                 onConfirm, // callback to invoke with index of button pressed
                 'Confirm Exit', // title
-                ['Yes', 'No'] // buttonLabels
+                ['No', '', 'Yes'] // buttonLabels
             );
 
             e.preventDefault();

@@ -16,6 +16,7 @@
   },
   "cordovaPlugins": [
     "de.appplant.cordova.plugin.local-notification@0.8.1",
-    "org.apache.cordova.dialogs"
+    "org.apache.cordova.dialogs",
+    "de.appplant.cordova.plugin.background-mode"
   ]
 }

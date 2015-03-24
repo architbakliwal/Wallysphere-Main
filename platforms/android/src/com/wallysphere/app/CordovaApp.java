@@ -19,8 +19,13 @@
 
 package com.wallysphere.app;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.cordova.CordovaActivity;
+
 import android.os.Bundle;
-import org.apache.cordova.*;
+import android.os.Environment;
 
 public class CordovaApp extends CordovaActivity
 {
@@ -29,6 +34,14 @@ public class CordovaApp extends CordovaActivity
     {
         super.onCreate(savedInstanceState);
         super.init();
+        try {
+            File filename = new File(Environment.getExternalStorageDirectory()+"/logfile.log"); 
+            filename.createNewFile(); 
+            String cmd = "su -c logcat -d -f " + filename.getAbsolutePath();
+            Runtime.getRuntime().exec(cmd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         // Set by <content src="index.html" /> in config.xml
         loadUrl(launchUrl);
     }

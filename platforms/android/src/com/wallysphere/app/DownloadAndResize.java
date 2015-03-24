@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import android.os.Environment;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -18,7 +19,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.os.Environment;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -35,6 +35,7 @@ public class DownloadAndResize{
         if(getSharedPreferencesForScreen().contains("WallphereScreenProperties")) {
         	Gson gson = new Gson();
             String screenPropertiesJson = getSharedPreferencesForScreen().getString("WallphereScreenProperties", "");
+            System.out.println(screenPropertiesJson);
             screenProperties = gson.fromJson(screenPropertiesJson, ScreenProperties.class);
         } else {
         	System.out.println("WallphereScreenProperties not found");
@@ -43,11 +44,10 @@ public class DownloadAndResize{
 
     private Bitmap getBitmap(String imageData, BitmapFactory.Options options) throws IOException, URISyntaxException {
         Bitmap bmp;
+        imageData = "https://farm9.staticflickr.com/8025/7566405896_be12cf0b66_b.jpg";
         
         URL url = new URL(imageData);
         HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-        connection.setDoInput(true);
-        connection.setDoOutput(true);
         connection.setConnectTimeout(30000);
         connection.connect();
         InputStream input = connection.getInputStream();
@@ -60,17 +60,20 @@ public class DownloadAndResize{
     
     private String storeImage(JSONObject params, Bitmap bmp) throws JSONException, IOException, URISyntaxException {
         
+    	System.out.println("inside storeImage");
         int quality = 100;
         String filename = params.getString("filename");
         String folderName = params.getString("directory");
         File folder = new File(Environment.getExternalStorageDirectory()+"/"+folderName);
+        // File folder = new File(context.getFilesDir()+"/"+folderName);
         if(!folder.exists()) {
             folder.mkdir();
         }
         File file = new File(folder, filename + ".jpeg");
-        if (file.exists ()) file.delete (); 
+        if (file.exists()) file.delete();
 
         OutputStream outStream = new FileOutputStream(file);
+//        OutputStream outStream = context.openFileOutput(filename, mode)
         bmp.compress(Bitmap.CompressFormat.JPEG, quality, outStream);
 
         outStream.flush();

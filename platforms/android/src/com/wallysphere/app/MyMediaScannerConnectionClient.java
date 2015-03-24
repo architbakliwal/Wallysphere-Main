@@ -14,6 +14,7 @@ final class MyMediaScannerConnectionClient implements MediaScannerConnectionClie
 	private MediaScannerConnection mConn;
 	
 	public MyMediaScannerConnectionClient(Context ctx, File file, String mimetype) {
+		System.out.println("inside MyMediaScannerConnectionClient constructor");
 		this.mFilename = file.getAbsolutePath();
 		mConn = new MediaScannerConnection(ctx, this);
 		mConn.connect();
@@ -21,6 +22,7 @@ final class MyMediaScannerConnectionClient implements MediaScannerConnectionClie
 	
 	@Override
 	public void onMediaScannerConnected() {
+		System.out.println("inside onMediaScannerConnected");
 		mConn.scanFile(mFilename, mMimetype);
 	}
 	

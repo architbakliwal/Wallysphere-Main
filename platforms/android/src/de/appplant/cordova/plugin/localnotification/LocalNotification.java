@@ -26,6 +26,7 @@ package de.appplant.cordova.plugin.localnotification;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import android.os.Environment;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
@@ -36,11 +37,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.gson.Gson;
-import com.wallysphere.app.DownloadFile;
-import com.wallysphere.app.ScreenProperties;
-import com.wallysphere.app.SettingsData;
-
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -48,9 +44,15 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
-import android.os.Environment;
 
-import de.appplant.cordova.plugin.notification.*;
+import com.google.gson.Gson;
+import com.wallysphere.app.DownloadFile;
+import com.wallysphere.app.ScreenProperties;
+import com.wallysphere.app.SettingsData;
+
+import de.appplant.cordova.plugin.notification.Manager;
+import de.appplant.cordova.plugin.notification.Notification;
+import de.appplant.cordova.plugin.notification.Options;
 
 /**
  * This plugin utilizes the Android AlarmManager in combination with local
@@ -530,12 +532,11 @@ public class LocalNotification extends CordovaPlugin {
 
         if (notification != null) {
             params = notification.toString() + "," + params;
+            System.out.println(event + " " + notification.getId());
         }
 
         String js = "cordova.plugins.notification.local.fireEvent(" +
                 "\"" + event + "\"," + params + ")";
-        
-        System.out.println(event + " " + notification.getId());
 
         if(event.equalsIgnoreCase("trigger")) {
             String fileName;
@@ -562,13 +563,16 @@ public class LocalNotification extends CordovaPlugin {
             
             try {
                 File folder = new File(Environment.getExternalStorageDirectory() + "/Wallysphere");
+                // File folder = new File(context.getFilesDir() + "/Wallysphere");
                 if(!folder.exists()) {
                 	System.out.println("The wallysphere folder could not be found.");
+                	return;
                     // throw new IOException("The wallysphere folder could not be found.");
                 }
                 File file = new File(folder, fileName + ".jpeg");
                 if(!file.exists()) {
                 	System.out.println("The image file could not be found.");
+                	return;
 //                     throw new IOException("The image file could not be found.");
                 }
 
@@ -576,7 +580,8 @@ public class LocalNotification extends CordovaPlugin {
                 Bitmap setAsWallpaper = BitmapFactory.decodeFile(file.getAbsolutePath());
                 wallpaperManager.setBitmap(setAsWallpaper);
             } catch (Exception e) {
-
+                System.out.println(e.getMessage());
+            	return;
             }
         }
 

@@ -41,16 +41,20 @@ public class DownloadFile extends AsyncTask<String, Void, String>
 //        urlString.append("https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=2962d4c497bd4b64a58dbdfb31e0da27&tags=night%2C+sky%2C+moon%2C+stars&text=night+sky+stars+moon&sort=interestingness-desc&content_type=1&media=photos&extras=url_o&per_page=10&page=1&format=json&nojsoncallback=1");
         urlString.append(apiUrl);
         
+        System.out.println("inside doInBackground");
         fileUrl = httpDownload(urlString);
+        System.out.println("0");
         filePath = dwr.download(fileUrl, params[0]);
-        return (filePath);
+        System.out.println("1");
+        return filePath;
     }
 
 	@Override
     protected void onPostExecute(String filePath)
     {
-    	File file = new File(filePath);
-    	MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(DownloadFile.context, file, null);
+		System.out.println("inside onPostExecute");
+//    	File file = new File(filePath);
+//    	MediaScannerConnectionClient client = new MyMediaScannerConnectionClient(DownloadFile.context, file, null);
         super.onPostExecute(filePath);
     }
 	
@@ -88,6 +92,7 @@ public class DownloadFile extends AsyncTask<String, Void, String>
 	}
     
     protected String httpDownload(StringBuilder urlString) {
+    	System.out.println("inside httpDownload");
     	HttpsURLConnection urlConnection = null;
         URL url = null;
         String response = "";
@@ -95,42 +100,25 @@ public class DownloadFile extends AsyncTask<String, Void, String>
 
         try
         {
-        	System.out.println("0");
             url = new URL(urlString.toString());
-            System.out.println("1");
             urlConnection = (HttpsURLConnection) url.openConnection();
-            System.out.println("2");
             urlConnection.setRequestMethod("GET");
-            System.out.println("3");
-            urlConnection.setDoOutput(true);
-            System.out.println("4");
             urlConnection.setConnectTimeout(30000);
-            System.out.println("5");
-            urlConnection.setDoInput(true);
-            System.out.println("6");
             urlConnection.connect();
-            System.out.println("7");
             InputStream inStream = null;
-            System.out.println("8");
             inStream = urlConnection.getInputStream();
-            System.out.println("9");
             BufferedReader bReader = new BufferedReader(new InputStreamReader(inStream));
-            System.out.println("10");
             String temp = "";
             while ((temp = bReader.readLine()) != null)
                 response += temp;
             bReader.close();
-            System.out.println("11");
             inStream.close();
-            System.out.println("12");
             urlConnection.disconnect();
-            System.out.println("13");
             if(apiSelector == 0) {
             	fileUrl = parseResponseForFlickr(response);
             } else if(apiSelector == 1) {
             	fileUrl = parseResponseFor500Px(response);
             }
-            System.out.println("14");
             
         }
         catch (Exception e)
